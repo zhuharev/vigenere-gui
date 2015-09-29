@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+body {
+	margin-bottom: 50px;
+}
+.container {
+	max-width: 800px;
+	margin: 0 auto;
+}
+textarea,input {
+  display: block;
+  width: 100%;
+  outline: none;
+  resize: none;
+}
+</style>
+</head>
+<body>
+<div class="container">
+<h2>Шифр Цезаря</h2>
+<h3>Настройки</h3>
+	<input type="text" name="offset" id="offset" placeholder="Введите смещение" value="3">
+<h3>Зашифровка</h3>
+	<input id="input1" type="text" value="Привет, как дела? Hi, how are you?">
+	<button id="button1">Зашифровать</button>
+	<span id="result1"></span>
+	<br>
+<h3>Расшифровка</h3>
+	<input id="input2" type="text" value="Привет, как дела? Hi, how are you?">
+	<button id="button2">Расшифровать</button>
+	<span id="result2"></span>
+
+<h2>Шифр Виженера</h2>
+<h3>Настройки</h3>
+	<input placeholder="Введите ключ" type="text" name="vis_key" id="vis_key" value="секретный ключ">
+<h3>Зашифровка</h3>
+	<textarea name="for_enc" id="for_enc" cols="30" rows="10">привет, как дела? это секретное послание</textarea>
+	<button id="button3">Зашифровать</button>
+	<br>
+	<input disabled id="result3">
+	<br>
+<h3>Расшифровка</h3>
+	<textarea name="for_dec" id="for_dec" cols="30" rows="10"></textarea>
+	<button id="button4">Расшифровать</button>
+	<input disabled id="result4">
+</div>
+
+<script>
+(function(){
+function $(id){return document.getElementById(id)}
+function get(url,cb) {
+	var myRequest = new XMLHttpRequest();
+	myRequest.onload = function(){cb(myRequest.responseText)}
+	myRequest.open('GET', url, true);
+	myRequest.send(null);
+}
+var i1 = $('input1')
+var b1 = $('button1')
+var r1 = $('result1')
+var i2 = $('input2')
+var b2 = $('button2')
+var r2 = $('result2'),
+offset = $('offset'),
+b3 = $('button3'),
+b4 = $('button4')
+
+b1.onclick = function() {
+	get("/enc?s="+$('input1').value + "&offset=" + $('offset').value, function(r) {
+		$('result1').innerHTML = r
+	})
+}
+b2.onclick = function() {
+	get("/dec?s="+$('input2').value + "&offset=" + $('offset').value, function(r) {
+		$('result2').innerHTML = r
+	})
+}
+
+b3.onclick = function() {
+	get("/vienc?s="+$('for_enc').value + "&key=" + $('vis_key').value, function(r) {
+		$('result3').value = r
+	})
+}
+
+b4.onclick = function() {
+	get("/videc?s="+$('for_dec').value + "&key=" + $('vis_key').value, function(r) {
+		$('result4').value = r
+	})
+}
+
+})()
+</script>
+</body>
+</html>
